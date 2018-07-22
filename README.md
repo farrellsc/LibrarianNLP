@@ -1,6 +1,6 @@
 > Resource list:
-> [DrQA Code](https://github.com/farrellsc/DrQA#trained-models-and-data)
-> [DrQA Paper](https://arxiv.org/pdf/1704.00051.pdf)
+> [[DrQA Code](https://github.com/farrellsc/DrQA#trained-models-and-data)|
+> [DrQA Paper](https://arxiv.org/pdf/1704.00051.pdf)]
 
 # 1. Code Reading
 
@@ -18,7 +18,12 @@ DrQA root
 │   └── tokenizer
 └── scripts
     ├── pipeline
+    │   └── interactive.py
+    ├── convert
+    │   └── squad.py
     └── reader
+        ├── preprocess.py
+        └── train.py
 ```
 
 ![DrQA Code Structure](/img/DrQA.jpg)
