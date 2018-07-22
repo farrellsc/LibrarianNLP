@@ -2,9 +2,11 @@
 > [[DrQA Code](https://github.com/farrellsc/DrQA#trained-models-and-data)|
 > [DrQA Paper](https://arxiv.org/pdf/1704.00051.pdf)]
 
-# 1. Code Reading
+---
 
-Core Utils to Read:
+# 1. DrQA
+
+Core sections to Read:
 ```
 DrQA root
 ├── drqa
@@ -26,20 +28,44 @@ DrQA root
         └── train.py
 ```
 
-![DrQA Code Structure](/img/DrQA.jpg)
+![DrQA Code Structure](/img/DrQA.png)
 
-## 1.1 Classs DrQA
-> drqa.pipeline.drqa
+Current Code Structure is based on "DrQA-scripts-reader-train.py".  
 
-### Critical Class Members
+**TODO**:  
+1. DrQA-scripts-reader-preprocess.py: process of raw data to coreNLP
+2. DrQA-scripts-reader-predict.py: process of prediction
+3. Use DrQA retriver & tokenizer on LibNLP for now
 
+---
 
+# 2. LibNLP Design
+Core Utils to Read:
+```
+LibNLP root
+├── src
+│   ├── pipeline
+│   │   └── LibNlp.py
+│   ├── data
+│   │   └── LibDataLoader.py
+│   ├── reader
+│   |   ├── Reader.py
+|   |   ├── Model.py
+|   |   └── networks
+│   |       ├── Network.py
+│   |       ├── BilinearSeqAttn.py
+│   |       └── StackedBRNN.py
+│   ├── retriever
+│   ├── tokenizer
+│   └── utils
+│       ├── TokenDictionary.py
+│       └── utils.py
+├── config
+├── data
+├── test
+└── scripts
+```
 
-### Critical Methods
-#### process
-calls process_batch
+![LibNlp Code Structure](/img/LibNlp.png)  
 
-
-
-# 2. Design
-
+---
