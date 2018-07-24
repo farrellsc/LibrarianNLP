@@ -4,6 +4,24 @@
 
 ---
 
+# 0. Current Objective
+
+```bash
+python scripts/train.py --embedding-file glove.840B.300d.txt --tune-partial 1000
+```
+
+**TODO**:  
+1. Now
+    2. do DataProcessor & train.py & data sections in "Reader.py"
+    5. double check training architectures
+    6. add detailed description to every method and class; add TYPE to parameters and returns
+2. Future
+    2. Use DrQA retriver & tokenizer on LibNLP for now
+    1. DrQA-scripts-reader-preprocess.py: process of raw data to coreNLP
+    2. DrQA-scripts-reader-predict.py: process of prediction
+
+---
+
 # 1. DrQA
 
 Core sections to Read:
@@ -32,11 +50,6 @@ DrQA root
 
 Current Code Structure is based on "DrQA-scripts-reader-train.py".  
 
-**TODO**:  
-1. DrQA-scripts-reader-preprocess.py: process of raw data to coreNLP
-2. DrQA-scripts-reader-predict.py: process of prediction
-3. Use DrQA retriver & tokenizer on LibNLP for now
-
 ---
 
 # 2. LibNLP Design
@@ -58,12 +71,18 @@ LibNLP root
 │   ├── retriever
 │   ├── tokenizer
 │   └── utils
+│       ├── AverageMeter.py
+│       ├── Timer.py
 │       ├── TokenDictionary.py
+│       ├── Param.py
+│       ├── register.py
 │       └── utils.py
 ├── config
 ├── data
 ├── test
 └── scripts
+    ├── train_noLog.py
+    └── train.py
 ```
 
 ![LibNlp Code Structure](/img/LibNlp.png)  

@@ -1,7 +1,9 @@
 import torch.nn as nn
 from .Network import Network
+from LibNlp.utils.Params import Params
 
 
+@Network.register("BilinearSeqAttn")
 class BilinearSeqAttn(Network):
     """A bilinear attention layer over a sequence X w.r.t y:
 
@@ -9,9 +11,9 @@ class BilinearSeqAttn(Network):
 
     Optionally don't normalize output weights.
     """
-    def __init__(self, x_size, y_size):
+    def __init__(self, doc_hidden_size, question_hidden_size):
         super(BilinearSeqAttn, self).__init__()
-        self.linear = nn.Linear(y_size, x_size)
+        self.linear = nn.Linear(question_hidden_size, doc_hidden_size)
         raise NotImplementedError
 
     def forward(self, x, y, x_mask):
@@ -24,3 +26,9 @@ class BilinearSeqAttn(Network):
         """
         raise NotImplementedError
 
+    @classmethod
+    def from_params(cls, params: Params) -> 'BilinearSeqAttn':
+        doc_hidden_size = params.pop('doc_hidden_size')
+        question_hidden_size = params.pop('question_hidden_size')
+        params.assert_empty(cls.__name__)
+        return cls(doc_hidden_size, question_hidden_size)

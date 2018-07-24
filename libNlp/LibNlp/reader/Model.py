@@ -1,5 +1,5 @@
-from .networks.StackedBRNN import StackedBRNN
-from .networks.BilinearSeqAttn import BilinearSeqAttn
+from .networks.Network import Network
+import copy
 
 
 class Model:
@@ -8,17 +8,27 @@ class Model:
     When the model forwards it updates all four networks to generate a prediction.
     """
 
-    def __init__(self, word_dict, feature_dict, state_dict):
+    def __init__(self, args, word_dict, feature_dict, state_dict):
         """
 
         :param word_dict:
         :param feature_dict:
         :param state_dict:
         """
-        self.doc_network = StackedBRNN(*doc_network_args)
-        self.question_network = StackedBRNN(*question_network_args)
-        self.start_attention = BilinearSeqAttn(*start_attention_args)
-        self.end_attention = BilinearSeqAttn(*end_attention_args)
+        self.args = args
+
+        doc_args = copy.deepcopy(self.args)
+        doc_args.network.pop("question_layers")
+        doc_args.network.num_layers = doc_args.network.pop('doc_layers')
+        self.doc_network = Network.from_params(self.args.network)
+
+        question_args = copy.deepcopy(self.args)
+        question_args.network.pop('doc_layers')
+        question_args.network.num_layers = question_args.network.pop('question_layers')
+        self.question_network = Network.from_params(self.args.network)
+
+        self.start_attention = Network.from_params(self.args.aligning)
+        self.end_attention = Network.from_params(self.args.aligning)
         raise NotImplementedError
 
     def forward(self, doc_word, doc_feature, doc_mask, question_word, question_mask):

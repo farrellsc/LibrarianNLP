@@ -1,0 +1,84 @@
+{
+   "pipeline": {
+      "reader": {
+         "type": "Default",
+         "grad_clipping": 10,
+         "dropout_emb": 0.4,
+         "fix_embeddings": true,
+         "tune_partial": 0,
+         "max_len": 15,
+         "optimizer": {
+            "type": "adamax",
+            "learning_rate": 0.1,
+            "momentum": 0,
+            "weight_decay": 0
+         },
+         "encoding": {
+            "network": {
+               "type": "lstm",
+               "batch_size": args.pipeline.dataLoader.batch_size,
+               "test_batch_size": args.pipeline.dataLoader.test_batch_size,      # not used
+               "hidden_size": 128,
+               "doc_layers": 3,
+               "question_layers": 3,
+               "dropout_rnn": 0.4,
+               "dropout_rnn_output": true,
+               "embedding_dim": 300,         # not used
+               "concat_rnn_layers": true,    # not used
+               "rnn_padding": false          # not used
+            },
+            "aligning": {
+               "type": "self_attn",
+               "doc_hidden_size": 2 * args.pipeline.reader.encoding.network.hidden_size,
+               "question_hidden_size": 2 * args.pipeline.reader.encoding.network.hidden_size,
+            },
+            "params": {
+               "use_qemb": true,
+               "use_in_question": true,
+               "use_pos": true,
+               "use_ner": true,
+               "use_lemma": true,
+               "use_tf": true,
+            }
+         }
+      },
+      "architecture": {
+         "doc_db": "None",
+         "candidate_file": "None"
+      },
+      "retriever": {
+         "type": "None"
+      },
+      "tokenizer": {
+         "type": "None"
+      },
+      "dataLoader": {
+         "type": "LibDataLoader",
+         "batch_size": 32,
+         "test_batch_size": 128,
+         "uncased_question": false,
+         "uncased_doc": false,
+         "restrict_vocab": false
+      }
+   },
+   "runtime": {
+      "data_workers": 5,
+      "random_seed": 1013,
+      "num_epochs": 40,
+      "valid_metric": "f1",
+      "display_iter": 25
+   },
+   "files": {
+      "model_name": "",
+      "data_dir": "/media/zzhuang/00091EA2000FB1D0/iGit/git_projects/libnlp/libNlp/data/datasets/one_sample_test/",
+      "model_dir": "/media/zzhuang/00091EA2000FB1D0/iGit/git_projects/libnlp/libNlp/data/models/",
+      "embed_dir": "/media/zzhuang/00091EA2000FB1D0/iGit/git_projects/libnlp/libNlp/data/embeddings/",
+      "train_file": "SQuAD-v1.1-train-processed-corenlp.txt",
+      "dev_file": "SQuAD-v1.1-dev-processed-corenlp.txt",
+      "dev_json": "SQuAD-v1.1-dev.json",
+      "embedding_file": "glove.840B.300d.txt",
+      "checkpoint": false,
+      "pretrained": "",
+      "expand_dictionary": false
+   }
+}
