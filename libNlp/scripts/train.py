@@ -69,7 +69,7 @@ def main(args):
     # Initialize reader
     logger.info('-' * 100)
     start_epoch = 0
-    reader = Reader(args)
+    reader = Reader(args.pipeline.reader)
 
     logger.info('-' * 100)
     logger.info('Generate features')

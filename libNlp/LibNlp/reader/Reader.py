@@ -1,4 +1,4 @@
-from .Model import Model
+from ibNlp.reader.models.Librarian import Model
 from utils.TokenDictionary import TokenDictionary
 import torch
 from torch import optim
@@ -33,7 +33,7 @@ class Reader:
         self.updateCount = 0
 
     def set_model(self, state_dict=None):
-        self.model = Model(self.args.encoding, self.word_dict, self.feature_dict, self.state_dict)
+        self.model = Model(self.args.model)
 
     def init_optimizer(self):
         """

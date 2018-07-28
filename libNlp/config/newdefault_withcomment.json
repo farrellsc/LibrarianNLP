@@ -13,8 +13,8 @@
             "momentum": 0,
             "weight_decay": 0
          },
-         "encoding": {
-            "network": {
+         "network": {
+            "encoding": {
                "type": "lstm",
                "batch_size": args.pipeline.dataLoader.batch_size,
                "test_batch_size": args.pipeline.dataLoader.test_batch_size,      # not used

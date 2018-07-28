@@ -1,20 +1,23 @@
 import torch.nn as nn
 from LibNlp.utils.Registrable import Registrable
-from LibNlp.utils.Params import Params
+from LibNlp.utils.DotDict import DotDict
 
 
 class Network(nn.Module, Registrable):
     """
-    An abstract ``Network`` class, defines method interfaces for its children classes.
+    An abstract ``Network`` class, defines method interfaces for its children classes, including RNNs and
+    Attention Mechanisms.
+    ``Network`` is a key component to ``Model``.
     """
 
     def forward(self, *args):
+        """
+        torch forward method
+        """
         raise NotImplementedError
 
     @classmethod
-    def from_params(cls, params: Params) -> 'Network':
-        # TODO(Mark): The adaptive iterator will need a bit of work here,
+    def from_params(cls, args: DotDict) -> 'Network':
         # to retrieve the scaling function etc.
-
-        iterator_type = params.pop_choice("type", cls.list_available())
-        return cls.by_name(iterator_type).from_params(params)
+        iterator_type = args.pop("type", cls.list_available())
+        return cls.by_name(iterator_type).from_params(args)
