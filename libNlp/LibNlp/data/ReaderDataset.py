@@ -6,9 +6,27 @@ import json
 
 class ReaderDataset(Dataset):
 
-    def __init__(self):
+    def __init__(
+            self,
+            uncased_question=False,
+            uncased_doc=False,
+            use_qemb=False,
+            use_in_question=False,
+            use_pos=False,
+            use_ner=False,
+            use_lemma=False,
+            use_tf=False
+    ):
         self.examples = None
-        self.model_args = None
+        self.uncased_question = uncased_question
+        self.uncased_doc = uncased_doc
+        self.use_qemb = use_qemb
+        self.use_in_question = use_in_question
+        self.use_pos = use_pos
+        self.use_ner = use_ner
+        self.use_lemma = use_lemma
+        self.use_tf = use_tf
+
         self.word_dict = None
         self.feature_dict = None
 
@@ -22,6 +40,10 @@ class ReaderDataset(Dataset):
         return [(len(ex['document']), len(ex['question']))
                 for ex in self.examples]
 
+    def set_utils(self, word_dict, feature_dict):
+        self.word_dict = word_dict
+        self.feature_dict = feature_dict
+
     def load_data(self, filename):
         """Load examples from preprocessed file.
         One example per line, JSON encoded.
@@ -31,11 +53,11 @@ class ReaderDataset(Dataset):
             examples = [json.loads(line) for line in f]
 
         # Make case insensitive?
-        if self.args.uncased_question or self.args.uncased_doc:
+        if self.uncased_question or self.uncased_doc:
             for ex in examples:
-                if self.args.uncased_question:
+                if self.uncased_question:
                     ex['question'] = [w.lower() for w in ex['question']]
-                if self.args.uncased_doc:
+                if self.uncased_doc:
                     ex['document'] = [w.lower() for w in ex['document']]
         self.examples = examples
 
@@ -44,7 +66,6 @@ class ReaderDataset(Dataset):
         Torchify a single example.
 
         :param example:
-        :param model:
         :return: document, features, question, start, end, ex['id']
         """
         # Index words
@@ -58,10 +79,10 @@ class ReaderDataset(Dataset):
             features = None
 
         # f_{exact_match}
-        if self.model_args.encoding.params.use_in_question:
+        if self.use_in_question:
             q_words_cased = {w for w in example['question']}
             q_words_uncased = {w.lower() for w in example['question']}
-            q_lemma = {w for w in example['qlemma']} if self.model_args.encoding.params.use_lemma else None
+            q_lemma = {w for w in example['qlemma']} if self.use_lemma else None
             for i in range(len(example['document'])):
                 if example['document'][i] in q_words_cased:
                     features[i][self.feature_dict['in_question']] = 1.0
@@ -71,21 +92,21 @@ class ReaderDataset(Dataset):
                     features[i][self.feature_dict['in_question_lemma']] = 1.0
 
         # f_{token} (POS)
-        if self.model_args.encoding.params.use_pos:
+        if self.use_pos:
             for i, w in enumerate(example['pos']):
                 f = 'pos=%s' % w
                 if f in self.feature_dict:
                     features[i][self.feature_dict[f]] = 1.0
 
         # f_{token} (NER)
-        if self.model_args.encoding.params.use_ner:
+        if self.use_ner:
             for i, w in enumerate(example['ner']):
                 f = 'ner=%s' % w
                 if f in self.feature_dict:
                     features[i][self.feature_dict[f]] = 1.0
 
         # f_{token} (TF)
-        if self.model_args.encoding.params.use_tf:
+        if self.use_tf:
             counter = Counter([w.lower() for w in example['document']])
             l = len(example['document'])
             for i, w in enumerate(example['document']):

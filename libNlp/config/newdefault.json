@@ -27,14 +27,6 @@
             },
             "aligning": {
                "type": "self_attn"
-            },
-            "params": {
-               "use_qemb": true,
-               "use_in_question": true,
-               "use_pos": true,
-               "use_ner": true,
-               "use_lemma": true,
-               "use_tf": true
             }
          }
       },
@@ -48,13 +40,23 @@
       "tokenizer": {
          "type": "None"
       },
-      "dataLoader": {
-         "type": "LibDataLoader",
-         "batch_size": 32,
-         "test_batch_size": 128,
-         "uncased_question": false,
-         "uncased_doc": false,
-         "restrict_vocab": false
+      "data": {
+         "type": "LibDataProcessor",
+         "dataProcessor": {
+            "uncased_question": false,
+            "uncased_doc": false,
+            "restrict_vocab": false,
+            "batch_size": 32,
+            "test_batch_size": 128
+         }, 
+         "params": {
+            "use_qemb": true,
+            "use_in_question": true,
+            "use_pos": true,
+            "use_ner": true,
+            "use_lemma": true,
+            "use_tf": true
+         }
       }
    },
    "runtime": {

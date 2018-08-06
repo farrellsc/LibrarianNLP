@@ -8,6 +8,9 @@ class Model(nn.Module, Registrable):
     An abstract ``Model`` class, defines the compositions for neural networks.
     """
 
+    def __init__(self, model_args):
+        self.model_args = model_args
+
     def forward(self, *inputs, **kwargs):
         """
         Overwriting 'forward' method in pytorch, used for iterating network. Calls ``forward`` method in all

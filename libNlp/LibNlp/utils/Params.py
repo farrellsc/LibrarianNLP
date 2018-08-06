@@ -226,10 +226,11 @@ class Params(MutableMapping):
     def set_defaults(self):
         """Make sure the commandline arguments are initialized properly."""
         # Check critical files exist
-        self.args.pipeline.reader.encoding.network.batch_size = self.args.pipeline.dataLoader.batch_size
-        self.args.pipeline.reader.encoding.network.test_batch_size = self.args.pipeline.dataLoader.test_batch_size
-        self.args.pipeline.reader.encoding.aligning.doc_hidden_size = 2 * self.args.pipeline.encoding.network.hidden_size
-        self.args.pipeline.reader.encoding.aligning.question_hidden_size = 2 * self.args.pipeline.encoding.network.hidden_size
+        self.args.pipeline.reader.model.encoding.batch_size = self.args.pipeline.data.dataProcessor.batch_size
+        self.args.pipeline.reader.model.encoding.test_batch_size = self.args.pipeline.data.dataProcessor.test_batch_size
+        self.args.pipeline.reader.model.aligning.doc_hidden_size = 2 * self.args.pipeline.reader.model.encoding.hidden_size
+        self.args.pipeline.reader.model.aligning.question_hidden_size = 2 * self.args.pipeline.reader.model.encoding.hidden_size
+        self.args.pipeline.data.dataProcessor.data_workers = self.args.runtime.data_workers
 
         self.args.files.dev_json = os.path.join(self.args.files.data_dir, self.args.files.dev_json)
         if not os.path.isfile(self.args.files.dev_json):
