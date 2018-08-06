@@ -14,7 +14,10 @@ class RawDataProcessor(Dataset, Registrable):
     def load_data(self, filename):
         raise NotImplementedError
 
+    def set_utils(self, **kwargs):
+        raise NotImplementedError
+
     @classmethod
     def from_params(cls, params: Params) -> 'RawDataProcessor':
-        iterator_type = params.pop_choice("type", cls.list_available())
+        iterator_type = params.pop("type", cls.list_available())
         return cls.by_name(iterator_type).from_params(params)

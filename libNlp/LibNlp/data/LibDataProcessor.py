@@ -3,24 +3,33 @@ from .RawDataProcessor import RawDataProcessor
 from .ReaderDataset import ReaderDataset
 from LibNlp.utils.Params import Params
 from overrides import overrides
-import json
 import torch
 
 
 @RawDataProcessor.register("LibDataProcessor")
 class LibDataProcessor(RawDataProcessor):
-    def __init__(self, data_args, batch_size, data_workers):
-        self.data_args = data_args
+    def __init__(self, batch_size, data_workers, dataset_args):
         self.batch_size = batch_size
         self.data_workers = data_workers
-        self.dataset: ReaderDataset = None
+        self.dataset = ReaderDataset(
+            uncased_question=dataset_args.dataProcessor.uncased_question,
+            uncased_doc=dataset_args.dataProcessor.uncased_doc,
+            use_qemb=dataset_args.params.use_qemb,
+            use_in_question=dataset_args.params.use_in_question,
+            use_pos=dataset_args.params.use_pos,
+            use_ner=dataset_args.params.use_ner,
+            use_lemma=dataset_args.params.use_lemma,
+            use_tf=dataset_args.params.use_tf
+        )
         self.loader = None
+        self.word_dict = None
+        self.feature_dict = None
 
     def set_loader(self):
         self.loader = DataLoader(
             self.dataset,
             batch_size=self.batch_size,
-            num_workers=self.data_workers,
+            num_workers=self.args.dataProcessor.data_workers,
             collate_fn=self.batchify,
         )
 
@@ -38,6 +47,9 @@ class LibDataProcessor(RawDataProcessor):
     def lengths(self):
         return [(len(ex['document']), len(ex['question']))
                 for ex in self.dataset]
+
+    def set_utils(self, word_dict, feature_dict):
+        self.dataset.set_utils(word_dict, feature_dict)
 
     @staticmethod
     def batchify(batch):
@@ -99,8 +111,8 @@ class LibDataProcessor(RawDataProcessor):
 
     @classmethod
     def from_params(cls, params: Params) -> 'LibDataProcessor':
-        batch_size = params.pop('batch_size')
-        data_workers = params.pop('data_workers')
-        data_args = params
-        params.assert_empty(cls.__name__)
-        return cls(data_args, batch_size, data_workers)
+        return cls(
+            params.dataProcessor.batch_size,
+            params.dataProcessor.data_workers,
+            params
+        )
