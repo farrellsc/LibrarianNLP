@@ -23,11 +23,6 @@ def main(args):
     trainProcessor.load_data(args.files.train_file)
     devProcessor.load_data(args.files.dev_file)
 
-    reader = Reader(
-        args.pipeline.reader.optimizer,
-        args.pipeline.reader.model,
-        args.pipeline.fix_embeddings
-    )
     featureDict = FeatureDict(
         trainProcessor.dataset,
         use_qemb=args.pipeline.data.params.use_qemb,
@@ -49,6 +44,11 @@ def main(args):
     # Data section Above finished & tested
     # --------------------------------------------------------------------------------------------
 
+    reader = Reader(
+        args.pipeline.reader.optimizer,
+        args.pipeline.reader.model,
+        fix_embeddings=args.pipeline.fix_embeddings
+    )
     reader.set_model()
 
     if args.files.embedding_file:

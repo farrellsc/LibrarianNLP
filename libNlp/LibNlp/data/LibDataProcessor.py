@@ -29,7 +29,7 @@ class LibDataProcessor(RawDataProcessor):
         self.loader = DataLoader(
             self.dataset,
             batch_size=self.batch_size,
-            num_workers=self.args.dataProcessor.data_workers,
+            num_workers=self.data_workers,
             collate_fn=self.batchify,
         )
 
@@ -40,9 +40,8 @@ class LibDataProcessor(RawDataProcessor):
     def __len__(self):
         return len(self.dataset)
 
-    @overrides
-    def __getitem__(self, index):
-        return self.vectorize(self.dataset[index])
+    def __iter__(self):
+        return self.loader.__iter__()
 
     def lengths(self):
         return [(len(ex['document']), len(ex['question']))
@@ -50,6 +49,7 @@ class LibDataProcessor(RawDataProcessor):
 
     def set_utils(self, word_dict, feature_dict):
         self.dataset.set_utils(word_dict, feature_dict)
+        self.set_loader()
 
     @staticmethod
     def batchify(batch):
