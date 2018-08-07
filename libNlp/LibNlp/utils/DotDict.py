@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class DotDict(dict):
     """
     a dictionary that supports dot notation
@@ -15,3 +18,6 @@ class DotDict(dict):
             if hasattr(value, 'keys'):
                 value = DotDict(value)
             self[key] = value
+
+    def __deepcopy__(self, memo):
+        return DotDict(deepcopy(dict(self)))

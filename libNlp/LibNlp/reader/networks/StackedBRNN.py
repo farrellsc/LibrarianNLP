@@ -48,12 +48,11 @@ class StackedBRNN(Network):
 
     @classmethod
     def from_params(cls, args: DotDict) -> 'StackedBRNN':
-        rnn_type = args.pop('type')
+        rnn_type = args.pop('rnn_type')
         embedding_size = args.pop('embedding_dim')
         hidden_size = args.pop('hidden_size')
         num_layers = args.pop('num_layers')
         dropout_rate = args.pop('dropout_rnn', 0)
         dropout_output = args.pop('dropout_rnn_output', False)
-        args.assert_empty(cls.__name__)
         return cls(embedding_size, hidden_size, num_layers, dropout_rate=dropout_rate, dropout_output=dropout_output,
                    rnn_type=rnn_type)

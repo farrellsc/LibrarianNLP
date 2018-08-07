@@ -268,11 +268,6 @@ class Params(MutableMapping):
             raise RuntimeError('Either embedding_file or embedding_dim '
                                'needs to be specified.')
 
-        # Make sure tune_partial and fix_embeddings are consistent.
-        if self.args.pipeline.reader.tune_partial > 0 and self.args.pipeline.reader.fix_embeddings:
-            logger.warning('WARN: fix_embeddings set to False as tune_partial > 0.')
-            self.args.pipeline.reader.fix_embeddings = False
-
         # Make sure fix_embeddings and embedding_file are consistent
         if self.args.pipeline.reader.fix_embeddings:
             if not (self.args.files.embedding_file or self.args.files.pretrained):

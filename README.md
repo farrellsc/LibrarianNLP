@@ -7,21 +7,24 @@
 # 0. Current Objective
 
 ```bash
-python scripts/train.py --embedding-file glove.840B.300d.txt --tune-partial 1000
+python scripts/train.py --embedding-file glove.840B.300d.txt
 ```
+
+**DONE**:
+Use `train_noLog.py` as testing baseline.
+1. Data Section is finished & tested.
+2. Reader Section is rounded-up, core functions in progress.
 
 **TODO**:  
 1. Now
-    2. Data Section: DataProcessor & train.py & data sections in "Reader.py"  
-    3. interaction between dataset & dataprocessor & reader got tangled...Update UML to do analysis  
-    5. Training Section: Model.py, Network.py  
-    7. read embedding system in DrQA. Update UML to do analysis  
-    6. add detailed description to every method and class; add TYPE to parameters and returns  
-    6. Retriever & Tokenizer: temporarily use sections from DrQA  
+    1. Training Section: Reader.update -> Model.forward -> Network.forward;  
+    2. Predicting Section: Reader.predict  
+    3. add detailed description to every method and class; add TYPE to parameters and returns  
+    4. Retriever & Tokenizer: temporarily use sections from DrQA  
 2. Future  
-    2. Use DrQA retriver & tokenizer on LibNLP for now  
-    1. DrQA-scripts-reader-preprocess.py: process of raw data to coreNLP  
-    2. DrQA-scripts-reader-predict.py: process of prediction  
+    1. Use DrQA retriver & tokenizer on LibNLP for now  
+    2. DrQA-scripts-reader-preprocess.py: process of raw data to coreNLP  
+    3. DrQA-scripts-reader-predict.py: process of prediction  
 
 ---
 

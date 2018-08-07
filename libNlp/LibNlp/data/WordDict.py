@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 class WordDict(dict):
 
     def __init__(self, examples, embedding_file=False, restrict_vocab=False):
+        super(WordDict, self).__init__()
         self.embedding_file = embedding_file
         self.restrict_vocab = restrict_vocab
         self.word_dict = self.build_word_dict(examples)
@@ -16,6 +17,12 @@ class WordDict(dict):
 
     def __len__(self):
         return len(self.word_dict)
+
+    def __contains__(self, item):
+        return item in self.word_dict
+
+    def tokens(self):
+        return self.word_dict.tokens()
 
     def build_word_dict(self, examples):
         """Return a dictionary from question and document words in
