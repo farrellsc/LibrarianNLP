@@ -34,5 +34,4 @@ class BilinearSeqAttn(Network):
     def from_params(cls, args: DotDict) -> 'BilinearSeqAttn':
         doc_hidden_size = args.pop('doc_hidden_size')
         question_hidden_size = args.pop('question_hidden_size')
-        args.assert_empty(cls.__name__)
         return cls(doc_hidden_size, question_hidden_size)

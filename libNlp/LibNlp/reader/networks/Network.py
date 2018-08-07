@@ -19,5 +19,5 @@ class Network(nn.Module, Registrable):
     @classmethod
     def from_params(cls, args: DotDict) -> 'Network':
         # to retrieve the scaling function etc.
-        iterator_type = args.pop("type", cls.list_available())
+        iterator_type = args.pop("type")
         return cls.by_name(iterator_type).from_params(args)

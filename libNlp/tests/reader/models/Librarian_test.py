@@ -9,11 +9,11 @@ from LibNlp.reader.networks.StackedBRNN import StackedBRNN
 from LibNlp.reader.networks.BilinearSeqAttn import BilinearSeqAttn
 import logging
 
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
-class TestReader(LibNlpTestCase):
+class TestLibrarian(LibNlpTestCase):
     def setUp(self):
         self.param_path = "/media/zzhuang/00091EA2000FB1D0/iGit/git_projects/libnlp/libNlp/config/newdefault.json"
         paramController = Params(self.param_path)
@@ -36,9 +36,6 @@ class TestReader(LibNlpTestCase):
             restrict_vocab=self.args.pipeline.data.dataProcessor.restrict_vocab
         )
 
-        self.reader = None
-
-    def test_initialization(self):
         self.reader = Reader(
             self.wordDict,
             self.featureDict,
@@ -47,9 +44,5 @@ class TestReader(LibNlpTestCase):
             fix_embeddings=self.args.pipeline.reader.fix_embeddings
         )
 
+    def test_initialization(self):
         self.reader.set_model()
-
-        if self.args.files.embedding_file:
-            self.reader.load_embeddings(self.wordDict.tokens(), self.args.files.embedding_file)
-
-        self.reader.init_optimizer()

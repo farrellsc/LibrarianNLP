@@ -18,6 +18,10 @@ def train(args, dataProcessor, model):
 
 
 def main(args):
+    # --------------------------------------------------------------------------------------------
+    # Data section
+    # --------------------------------------------------------------------------------------------
+
     trainProcessor = RawDataProcessor.from_params(args.pipeline.data)
     devProcessor = RawDataProcessor.from_params(args.pipeline.data)
     trainProcessor.load_data(args.files.train_file)
@@ -45,28 +49,26 @@ def main(args):
     # --------------------------------------------------------------------------------------------
 
     reader = Reader(
+        wordDict,
+        featureDict,
         args.pipeline.reader.optimizer,
         args.pipeline.reader.model,
-        fix_embeddings=args.pipeline.fix_embeddings
+        fix_embeddings=args.pipeline.reader.fix_embeddings
     )
     reader.set_model()
-
     if args.files.embedding_file:
-        reader.load_embeddings(reader.word_dict.tokens(), args.files.embedding_file)
-    if args.pipeline.reader.tune_partial > 0:
-        top_words = utils.top_question_words(args, trainProcessor.dataset, wordDict)
-        reader.tune_embeddings([w[0] for w in top_words])
+        reader.load_embeddings(wordDict.tokens(), args.files.embedding_file)
     reader.init_optimizer()
 
     stats = {'timer': utils.Timer(), 'epoch': 0, 'best_valid': 0}
     start_epoch = 0
     for epoch in range(start_epoch, args.runtime.num_epochs):
         stats['epoch'] = epoch
-        train(args, trainProcessor, reader, stats)
+        train(args, trainProcessor, reader)
         utils.validate_unofficial(args, trainProcessor, reader, stats, mode='train')
         result = utils.validate_unofficial(args, devProcessor, reader, stats, mode='dev')
         if result[args.runtime.valid_metric] > stats['best_valid']:
-            reader.save(args.files.model_file)
+            reader.save(args.files.model_file, epoch)
             stats['best_valid'] = result[args.runtime.valid_metric]
 
 
