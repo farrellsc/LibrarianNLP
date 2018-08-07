@@ -30,8 +30,8 @@ class Reader:
         self.optimizer = None
         self.updateCount = 0
 
-    def set_model(self, state_dict=None):
-        self.model = Model(self.model_args)
+    def set_model(self):
+        self.model = Model.from_params(self.model_args)
 
     def init_optimizer(self):
         """

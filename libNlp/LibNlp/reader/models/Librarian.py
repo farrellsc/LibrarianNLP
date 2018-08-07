@@ -12,7 +12,7 @@ class Librarian(Model):
     When the model forwards it updates all four networks to generate a prediction.
     """
 
-    def __init__(self, args: DotDict):
+    def __init__(self, doc_args, question_args, aligning_args):
         """
         On initialization 'Model' construct four networks using input args:
             doc_network: StackedBRNN for encoding texts
@@ -22,20 +22,10 @@ class Librarian(Model):
 
         :param args: config.pipeline.reader.encoding
         """
-        self.args = args
-
-        doc_args = copy.deepcopy(self.args)
-        doc_args.encoding.pop("question_layers")
-        doc_args.encoding.num_layers = doc_args.encoding.pop('doc_layers')
-        self.doc_network = Network.from_params(self.args.encoding)
-
-        question_args = copy.deepcopy(self.args)
-        question_args.encoding.pop('doc_layers')
-        question_args.encoding.num_layers = question_args.encoding.pop('question_layers')
-        self.question_network = Network.from_params(self.args.encoding)
-
-        self.start_attention = Network.from_params(self.args.aligning)
-        self.end_attention = Network.from_params(self.args.aligning)
+        self.doc_network = Network.from_params(doc_args)
+        self.question_network = Network.from_params(question_args)
+        self.start_attention = Network.from_params(aligning_args)
+        self.end_attention = Network.from_params(aligning_args)
 
     def forward(self, doc_word, doc_feature, doc_mask, question_word, question_mask):
         """
@@ -53,4 +43,12 @@ class Librarian(Model):
 
     @classmethod
     def from_params(cls, args: DotDict) -> 'Librarian':
-        raise NotImplementedError
+        doc_args = copy.deepcopy(args)
+        doc_args.encoding.pop("question_layers")
+        doc_args.encoding.num_layers = doc_args.encoding.pop('doc_layers')
+
+        question_args = copy.deepcopy(args)
+        question_args.encoding.pop('doc_layers')
+        question_args.encoding.num_layers = question_args.encoding.pop('question_layers')
+
+        return cls(doc_args, question_args, args.aligning)

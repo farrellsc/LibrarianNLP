@@ -35,4 +35,5 @@ class TestDataProcessor(LibNlpTestCase):
         self.processor.set_utils(feature_dict=featureDict, word_dict=wordDict)
         assert type(self.processor.dataset.feature_dict) == FeatureDict
         assert type(self.processor.dataset.word_dict) == WordDict
-        assert len(self.processor.dataset[0]) == 6
+        for id, one in enumerate(self.processor):
+            print(id, one[0].shape)
